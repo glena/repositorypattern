@@ -47,8 +47,8 @@
 #page-background { 
   background: #99A0A6 url('http://germanlena.com.ar/assets/img/backgrounds/image0019.jpg');
   background-size: cover;
-  height: 105%;
-  width: 105%;
+  height: 110%;
+  width: 110%;
   position: fixed;
   top: -5%;
   left: -5%;
@@ -58,6 +58,9 @@
   -webkit-filter: blur(5px); -moz-filter: blur(5px); -o-filter: blur(5px); -ms-filter: blur(5px); filter: blur(5px);
 }
 
+p.big {
+  font-size: 2em;
+}
 /*********************************************
  * LINKS
  *********************************************/
