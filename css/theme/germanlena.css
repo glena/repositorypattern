@@ -3,7 +3,9 @@
 /*********************************************
  * GLOBAL STYLES
  *********************************************/
-
+body {
+  text-shadow: 0 0 10px #000000;
+}
 .reveal {
   font-family: 'Roboto Condensed',sans-serif;
   font-size: 36px;
@@ -29,8 +31,7 @@
   color: #eeeeee;
   font-family: 'Roboto Condensed',sans-serif;
   line-height: 0.9em;
-  letter-spacing: 0.02em;
-  text-shadow: 0px 0px 6px rgba(0, 0, 0, 0.2); }
+  letter-spacing: 0.02em; }
 
 
 .reveal .main h1 {
@@ -66,7 +67,8 @@ p.big {
  *********************************************/
 .reveal a:not(.image) {
   text-decoration: none;
-  color: #FF0085; }
+  color: #FF0085;
+  text-shadow: 0 0 10px #FFFFFF; }
 
 .reveal a:not(.image):hover {
   text-decoration: underline;

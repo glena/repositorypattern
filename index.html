@@ -46,7 +46,7 @@
 					<h1>Laravel &amp; Repository Pattern</h1>
 					<h3>Cómo y por qué implementar Repository Pattern</h3>
 					<p>
-						<small><a href="http://germanlena.com.ar">Germ&aacute;n Lena</a> / <a href="http://twitter.com/german_lena">@german_lena</a></small>
+						<a href="http://germanlena.com.ar">Germ&aacute;n Lena</a> / <a href="http://twitter.com/german_lena">@german_lena</a>
 					</p>
 				</section>
 		
@@ -148,8 +148,8 @@ class UserController extends BaseController {
   {
     $users = $this->repo->getAllUsers();
 	
-	// Un poco de magia, claramente no suelta en el controller...
-	// (Abstraction, Command bus, ...)
+    // Un poco de magia, claramente no suelta en el controller...
+    // (Abstraction, Command bus, ...)
 	
     return View::make('user.index', compact('users'));
   }
@@ -170,8 +170,9 @@ class UserController extends BaseController {
 				<!-- Example of nested vertical slides -->
 				<section>
 					<section>
-						<h2>¿Para qué abstraerlo totalmente?</h2>
+						<h2>¿Por qué abstraerlo totalmente?</h2>
 						<ul>
+								<li class="fragment">No tenemos queries desparramadas</li>
 								<li class="fragment">Intercambiar facilmente cómo accedemos a los datos</li>
 								<li class="fragment">SOLID</li>
 						</ul>
@@ -279,10 +280,10 @@ class UserServiceProvider extends ServiceProvider {
 				<section>
 					<h2>Ok, resumime chabon!</h2>
 					<p>
-						¡Cambio la capa de datos (migramos a mongodb, redis o agregamos solr/elastic search ), solo hay que actualizar los repositorios!
+						¡Cambió la capa de datos (migramos a mongodb, redis o agregamos solr/elastic search ), solo hay que actualizar los repositorios!
 					</p>
 					<p>
-						Se agrego manejo de estado de los usuarios, tenemos que actualizar las queries en los repos que correspondan
+						Se agregó manejo de estado de los usuarios, tenemos que actualizar las queries en los repos que correspondan
 					</p>
 				</section>
 	
