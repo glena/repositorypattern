@@ -48,6 +48,11 @@
 					<p>
 						<a href="http://germanlena.com.ar">Germ&aacute;n Lena</a> / <a href="http://twitter.com/german_lena">@german_lena</a>
 					</p>
+					<aside class="notes">
+						No voy a entrar en profundizar más allá de repository pattern. A partir de esto da mucho para produndizar en otros temas pero la idea es hacerla corta.
+						Cuando empece a armar esto arranque por la docu de laravel. No dice mucho, solo mensiona un ejemplo de como inyectar un repository al controller. Segui investigando para ver de no perder nada importante y encontra varios blogs que hablaban de esto (y con el mismo ejemplo...).
+						Al final estan las refencias para que puedan revisarlos ustedes.
+					</aside>
 				</section>
 		
 				<section>
@@ -70,6 +75,10 @@ class UserController extends BaseController {
 }
 								</code>
 							</pre>
+							<aside class="notes">
+								Comunmente nuestros controllers suelen quedar parecidos a este.
+								Traemos de base de datos algo, hacemos algun proceso y se lo pasamos a la view.
+							</aside>
 						</section>
 						<section>
 								<h2>Problemas</h2>
@@ -79,6 +88,12 @@ class UserController extends BaseController {
 									<li class="fragment">Nuestro controller esta altamente acoplado a la clase User</li>
 									<li class="fragment">Es dificil de hacer tests</li>
 								</ul>
+								<aside class="notes">
+									¿Que tiene de malo? Primero que tenemos la logica de datos en los controllers y suelta por toda la app.
+									Cualquier cambio que tengamos que hacer tenemos que revisar que no se nos escape ninguna query.
+									Por otro lado el controller depende 100% de la clase User, cuando en realidad no es necesario.
+									Si queremos hacer un test del controller tenemos que levantar una DB y cargarle datos solo para tener un entorno controlado donde hacer el test.
+								</aside>
 						</section>
 				</section>
 				
@@ -89,6 +104,11 @@ class UserController extends BaseController {
 									¡Sacando esta lógica del controller!
 								</p>
 								<img class="fragment" src="images/yes.gif" />
+								<aside class="notes">
+									Si lo pensamos un poco, estaría bueno no tener esta logica de acceso a datos en el controller.
+									Hay muchas cosas que hacer como por ej abstraer los comportamientos propios del negocio en nuestro modelo para no tener clases anemicas.
+									En este caso me voy a enfocar en los repositories. Estaría bueno en algun momento tener una charla de DDD o como enfocarnos en tener un dominio más rico.
+								</aside>
 						</section>
 						<section>
 								<h2>Repository Pattern</h2>
@@ -96,6 +116,9 @@ class UserController extends BaseController {
 									Es simplemente una capa de abstracción donde va a parar toda la lógica de acceso a datos.
 								</p>
 								<img class="fragment" src="images/cool.gif" />
+								<aside class="notes">
+									Un repository no es más que una capa de abstracción donde vamos a poner la lógica de acceso a datos. En este caso la vamos a consumir desde nuestro controller pero lo correcto sería que el controller consuma nuestro dominio y que los repositories sean consumidos por el dominio como lo que es, una capa de persistencia.
+								</aside>
 						</section>
 						<section>
 								<h2>Entonces, hagamos el UserRepository</h2>
@@ -111,6 +134,7 @@ class UserRepository {
 }
 										</code>
 								</pre>
+								
 						</section>
 						<section>
 								<h2>Actualicemos el controller</h2>
@@ -132,6 +156,10 @@ class UserController extends BaseController {
 }
 										</code>
 								</pre>
+								<aside class="notes">
+									¿Qué pasa acá? Logramos encapsular el acceso a datos en una clase. Evitamos tener todo desparramado pero seguimos acoplados a la clase usuario. El controller sigue conociendo demasiado y acoplado.
+									¿Qué podemos hacer?, inyectar el repositorio.
+								</aside>
 						</section>
 						<section>
 								<h2>Inyectemos!</h2>
@@ -156,6 +184,7 @@ class UserController extends BaseController {
 }
 										</code>
 								</pre>
+								
 						</section>
 						<section>
 								<h2>Y ahora?</h2>
@@ -176,6 +205,11 @@ class UserController extends BaseController {
 								<li class="fragment">Intercambiar facilmente cómo accedemos a los datos</li>
 								<li class="fragment">SOLID</li>
 						</ul>
+						<aside class="notes">
+							En este punto ganamos un poquito de flexibilidad, podemos empezar a hacer tests pero seguimos dependiendo de la clase User indirectamente. 
+							Si quisieramos cambiar la implementación tendríamos que extender el repositorio.
+							Estamos un poco más SOLID que antes.
+						</aside>
 					</section>
 					
 					<section>
@@ -189,11 +223,22 @@ class UserController extends BaseController {
 								<li class="fragment">Interface segregation principle: muchas interfaces específicas del cliente son mejores que una única interfaz de proposito general</li>
 								<li class="fragment">Dependency inversion principle: depender de abstracciones y no de cosas concretas</li>
 						</ul>
+						<aside class="notes">
+							Sigle responsability: delegamos el acceso a datos a una clase que tiene solo esa responsabilidad (el controller no llego a eso todavía).
+							Open/Close: si modificamos la capa de persistencia no tenemos que modificar el controller. Ahora podríamos extender el repository (o algo asi...)
+							Liskov substitution: Podemos Cambiar la inyección del repository y el controller debería seguir funcionando igual
+							Interfaz segregation: no lo estamos cumpliendo por ahora
+							Dependency inversion: esta a medias, no esta totalmente abstraido
+						</aside>
+					</section>
 					</section>
 					
 					<section>
 						<h2>¡Hagamos una interfaz!</h2>
 						<img src="images/sueño.gif" />
+						<aside class="notes">
+							Abstraigamoslo del todo entonces, ya falta poco.
+						</aside>
 					</section>
 					
 				</section>
@@ -207,6 +252,7 @@ class IUserRepository {
 
   public function getAllUsers();
   public function getById();
+  public function save(User user);
 
 }
 
@@ -222,6 +268,13 @@ class UserController extends BaseController {
   }
 										</code>
 								</pre>
+								
+							<aside class="notes">
+								El problema que podemos tener es que estamos trabajando con Active record.
+								No podemos asegurarnos 100% que no se este accediendo directamente a la base de datos por fuera del repository.
+								Sería mejor si implementaramos data mapper.
+								Es importante que el save lo haga el repository.
+							</aside>
 						</section>
 		
 						<section>
@@ -235,6 +288,9 @@ class UserController extends BaseController {
 							<p class="fragment big">
 								Me dejo de funcionar el IoC... 
 							</p>
+							<aside class="notes">
+								El IoC no puede instanciar la dependencia porque es una interfaz.
+							</aside>
 						</section>
 						
 						<section>
@@ -297,6 +353,7 @@ class UserServiceProvider extends ServiceProvider {
 						<h2>Referencias</h2>
 						<ul>
 								<li>http://laravel.com/docs/ioc</li>
+								<li>http://fideloper.com/how-we-code</li>
 								<li>http://heera.it/laravel-repository-pattern</li>
 								<li>http://ryantablada.com/post/the-repository-pattern-in-action</li>
 								<li>http://culttt.com/2013/07/08/creating-flexible-controllers-in-laravel-4-using-repositories/</li>
